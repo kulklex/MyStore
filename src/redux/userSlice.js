@@ -4,10 +4,9 @@ import axiosInstance from "../utils/axiosInstance"
 
 
 const initialState = {
-  user: localStorage.getItem("userToken") ? JSON.stringify(localStorage.getItem("userToken")).user : null,
-  accessToken: localStorage.getItem("userToken") ? JSON.stringify(localStorage.getItem("userToken")).accessToken : null,
-  refreshToken: localStorage.getItem("userToken") ? JSON.stringify(localStorage.getItem("userToken")).refreshToken : null,
-  token: null,
+  user: localStorage.getItem("userToken") ? JSON.parse(localStorage.getItem("userToken")).user : null,
+  accessToken: localStorage.getItem("userToken") ? JSON.parse(localStorage.getItem("userToken")).accessToken : null,
+  refreshToken: localStorage.getItem("userToken") ? JSON.parse(localStorage.getItem("userToken")).refreshToken : null,
   isLoading: false,
   error: null,
 };
@@ -34,17 +33,14 @@ export const loadUserFromLocalStorage = createAsyncThunk(
 
 // Refresh token thunk
 export const refreshTokens = createAsyncThunk(
-  "user/refreshToken",
-  async (_, { getState, rejectWithValue }) => {
-    const refreshToken = JSON.parse(localStorage.getItem('userToken')).refreshToken;
-    console.log("Refresh token: " + refreshToken)
+  "user/refreshTokens",
+  async (_, { rejectWithValue }) => {
+    const { refreshToken } = JSON.parse(localStorage.getItem('userToken'));
     try {
       const response = await axiosInstance.post(`/api/auth/refresh-token`, { token: refreshToken });
       return response.data;
     } catch (error) {
-      console.error(error)
-      toast.error(error.response?.data?.message);
-      console.error("Refresh Token Error: ", error);
+      toast.error(error.response?.data?.message || "Failed to refresh token");
       return rejectWithValue("Failed to refresh token");
     }
   }
@@ -53,7 +49,7 @@ export const refreshTokens = createAsyncThunk(
 // Async thunk for user sign up
 export const signUpUser = createAsyncThunk(
   "user/signUpUser",
-  async ({ email, password, confirmPassword, firstName, lastName }) => {
+  async ({ email, password, confirmPassword, firstName, lastName }, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.post(`/api/auth/sign-up`, {
         email,
@@ -65,7 +61,8 @@ export const signUpUser = createAsyncThunk(
       return response.data;
     } catch (error) {
       toast.error(error.response?.data?.message);
-      return console.error("Sign Up Error: ", error);
+      console.error("Sign Up Error: ", error);
+      return rejectWithValue("Failed to sign up")
     }
   }
 );
@@ -73,7 +70,7 @@ export const signUpUser = createAsyncThunk(
 // Async thunk for user sign in
 export const signInUser = createAsyncThunk(
   "user/signInUser",
-  async ({ email, password }) => {
+  async ({ email, password }, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.post(`/api/auth/sign-in`, {
         email,
@@ -82,14 +79,15 @@ export const signInUser = createAsyncThunk(
       return response.data;
     } catch (error) {
       toast.error(error.response?.data?.message);
-      return console.error("Sign In Error: ", error);
+      console.error("Sign In Error: ", error);
+      return rejectWithValue("Failed to sign in")
     }
   }
 );
 
 const userSlice = createSlice({
   name: "user",
-  initialState: initialState,
+  initialState,
   reducers: {
     logout: (state) => {
       state.user = null;
@@ -108,9 +106,9 @@ const userSlice = createSlice({
       .addCase(signUpUser.fulfilled, (state, action) => {
         state.isLoading = false;
         state.user = action.payload.result;
-        state.token = action.payload.token;
+        state.accessToken = action.payload.accessToken;
+        state.refreshToken = action.payload.refreshToken;
         localStorage.setItem("userToken", JSON.stringify({ user: action.payload.result, accessToken: action.payload.accessToken, refreshToken: action.payload.refreshToken }));
-
         window.location.href = "/";
       })
       .addCase(signUpUser.rejected, (state, action) => {
@@ -124,7 +122,8 @@ const userSlice = createSlice({
       .addCase(signInUser.fulfilled, (state, action) => {
         state.isLoading = false;
         state.user = action.payload.result;
-        state.token = action.payload.token;
+        state.accessToken = action.payload.accessToken;
+        state.refreshToken = action.payload.refreshToken;
         localStorage.setItem("userToken", JSON.stringify({ user: action.payload.result, accessToken: action.payload.accessToken, refreshToken: action.payload.refreshToken }));
         window.location.href = "/";
       })
