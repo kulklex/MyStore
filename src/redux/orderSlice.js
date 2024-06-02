@@ -2,18 +2,19 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axiosInstance from "../utils/axiosInstance";
 import { refreshTokens } from './userSlice';
 
+
 const getTokenFromLocalStorage = () => {
     const userToken = JSON.parse(localStorage.getItem('userToken'));
-    return userToken ? userToken.refreshToken : null;
+    return userToken ? userToken.accessToken : null;
 };
 
 export const createOrder = createAsyncThunk(
     'orders/createOrder',
     async (orderData, { getState, dispatch }) => {
        try {
-        const token = JSON.parse(localStorage.getItem('userToken')).refreshToken;
+        const token = JSON.parse(localStorage.getItem('userToken')).accessToken;
         if (!token) {
-            console.error('No refresh token found');
+            console.error('No access token found');
         }
         const response = await axiosInstance.post(`/api/orders`, orderData, {
             headers: {
@@ -33,7 +34,7 @@ export const createOrder = createAsyncThunk(
 export const getOrder = createAsyncThunk(
     'orders/getOrder',
     async (orderId, { getState }) => {
-        const token = getTokenFromLocalStorage();
+        const token = JSON.parse(localStorage.getItem('userToken')).accessToken
         const response = await axiosInstance.get(`/api/orders/${orderId}`, {
             headers: {
                 Authorization: `Bearer ${token}`
@@ -46,7 +47,7 @@ export const getOrder = createAsyncThunk(
 export const getAllOrders = createAsyncThunk(
     'orders/getAllOrders',
     async (_, { getState }) => {
-        const token = getTokenFromLocalStorage();
+        const token = JSON.parse(localStorage.getItem('userToken')).accessToken
         const response = await axiosInstance.get(`/api/orders/`, {
             headers: {
                 Authorization: `Bearer ${token}`
@@ -59,7 +60,7 @@ export const getAllOrders = createAsyncThunk(
 export const editOrder = createAsyncThunk(
     'orders/editOrder',
     async ({ id, orderData }, { getState }) => {
-        const token = getTokenFromLocalStorage();
+        const token = JSON.parse(localStorage.getItem('userToken')).accessToken
         const response = await axiosInstance.put(`/api/orders/${id}`, orderData, {
             headers: {
                 Authorization: `Bearer ${token}`
@@ -72,7 +73,7 @@ export const editOrder = createAsyncThunk(
 export const updateOrderStatus = createAsyncThunk(
     'orders/updateOrderStatus',
     async ({ id, status }, { getState }) => {
-        const token = getTokenFromLocalStorage();
+        const token = JSON.parse(localStorage.getItem('userToken')).accessToken
         const response = await axiosInstance.put(`/api/orders/${id}`, { status }, {
             headers: {
                 Authorization: `Bearer ${token}`
@@ -85,7 +86,7 @@ export const updateOrderStatus = createAsyncThunk(
 export const deleteOrder = createAsyncThunk(
     'orders/deleteOrder',
     async (orderId, { getState }) => {
-        const token = JSON.parse(localStorage.getItem('userToken')).refreshToken;;
+        const token = JSON.parse(localStorage.getItem('userToken')).accessToken;
         const response = await axiosInstance.delete(`/api/orders/${orderId}`, {
             headers: {
                 Authorization: `Bearer ${token}`

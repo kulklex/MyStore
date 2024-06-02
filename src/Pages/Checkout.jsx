@@ -317,9 +317,9 @@ function Checkout() {
           </div>
         </div>
 
-        <div className="p-4 flex flex-col md:flex-row justify-center items-center space-y-1">
+        <div className="p-4 flex flex-col md:flex-row  items-center justify-center space-y-2">
           <button
-            className="text-white w-[50%] md:w-[15%] bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-black-300 font-medium rounded-lg text-sm py-2.5 mr-2 dark:bg-black-600 dark:hover:bg-black-700 focus:outline-none mx-9 dark:focus:ring-black-800 disabled:bg-gray-400"
+            className="text-white w-[50%] md:w-[15%] bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-black-300 font-medium rounded-lg text-sm py-2.5 dark:bg-black-600 dark:hover:bg-black-700 focus:outline-none mx-9 mt-2 dark:focus:ring-black-800 disabled:bg-gray-400"
             {...config}
             onClick={handlePayment}
             disabled={
@@ -334,7 +334,7 @@ function Checkout() {
             disabled={
               !email || !address || !phone || !postCode || !state || !city
             }
-            className="text-white w-[50%] md:w-[15%] bg-black hover:bg-black-800 focus:ring-4 focus:ring-black-300 font-medium rounded-lg text-sm py-2.5 mr-2 dark:bg-black-600 dark:hover:bg-black-700 focus:outline-none mx-9 dark:focus:ring-black-800 disabled:bg-gray-400"
+            className="text-white w-[50%] md:w-[15%] bg-black hover:bg-black-800 focus:ring-4 focus:ring-black-300 font-medium rounded-lg text-sm py-2.5 dark:bg-black-600 dark:hover:bg-black-700 focus:outline-none mx-9 dark:focus:ring-black-800 disabled:bg-gray-400"
           >
             Pay
           </button>
@@ -345,4 +345,3 @@ function Checkout() {
 }
 
 export default Checkout;
-

@@ -4,7 +4,7 @@ import { refreshTokens } from "../redux/userSlice";
 
 
 const apiClient = axios.create({
-  baseURL: "http://localhost:5000", 
+  baseURL: "https://m-store-server.onrender.com", 
 });
 
 apiClient.interceptors.response.use(
