@@ -18,7 +18,6 @@ export default function AuthForm({ authType }) {
 
 
   const dispatch = useDispatch();
-  // const { isLoading, error } = useSelector((state) => state.user);
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -180,7 +179,7 @@ export default function AuthForm({ authType }) {
           >
             Submit
           </button>
-          <footer className="flex justify-center gap-1">
+          <footer className="flex justify-center gap-1 pt-2">
             <p className="text-14 font-normal text-gray-600">
               {authType === "SignIn"
                 ? "Don't have an account?"

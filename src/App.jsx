@@ -9,6 +9,7 @@ import Products from "./Pages/Products";
 import HomePage from "./Pages/homepage";
 import LoginPage from "./Pages/login";
 import SignUpPage from "./Pages/register";
+import ResetPassword from "./Pages/ResetPassword";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<SignUpPage />} />
         <Route path="/checkout" element={<Checkout />} />
+        <Route path="/reset-password" element={<ResetPassword/>} />
       </Routes>
     </div>
   );
